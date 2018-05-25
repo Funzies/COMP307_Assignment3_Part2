@@ -49,12 +49,22 @@ public class BayesClassifier {
                 }
 
                 //incrementing cells in counts based on data
-                int classe = values.get(values.size()-1);
+                int _class = values.get(values.size()-1);
                 for (int i = 0; i < values.size(); i++){ //skip class at end
                     int featureValue = values.get(i);
-                    int featureRow = i*2 + featureValue; //even rows are false values,
-
+                    int featureRow = i*2 + featureValue; //even rows are false classes, odd rows are true classes
+                    counts[featureRow][_class]++;
                 }
+            }
+            System.out.print("\tClass = 0 \t\t\t\t Class = 1 \n");
+            for (int i = 0; i < FEATURES; i++) {
+                for (int j = 0; j < CLASSES; j++) {
+                    String bool = "false";
+                    if (i%2 == 1) { bool = "true"; }
+                    System.out.print("\tFeature " + i/2 + " = " + bool + ": ");
+                    System.out.print(counts[i][j] + "");
+                }
+                System.out.print("\n");
             }
 
         } catch (IOException e) {
