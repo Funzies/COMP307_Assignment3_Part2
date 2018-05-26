@@ -64,7 +64,7 @@ public class BayesClassifier {
                     int featureRow = i*2 + featureValue; //even rows are when feature is false, odd rows are when true
                     counts[featureRow][_class]++;
                 }
-
+                //Keeping count of the totals in each class
                 if (_class == 0){ totalNonSpam++; }
                 else { totalSpam++; }
             }
@@ -79,7 +79,7 @@ public class BayesClassifier {
                 System.out.print("\n");
             }
             System.out.println("Total spam instances: "+totalSpam);
-            System.out.println("Total Non-spam instances: "+totalNonSpam);
+            System.out.println("Total Non-spam instances: "+totalNonSpam + "\n");
 
         } catch (IOException e) {
             System.out.println("File I/O error!");
@@ -91,8 +91,8 @@ public class BayesClassifier {
      * Classification is either a 0 or 1 indicating non spam or spam respectively.
      */
     public void classify(){
-        List<Integer> classifications = new ArrayList<>();
-
+        int instanceNum = 1;
+        int classification;
         try {
             BufferedReader in = new BufferedReader(new FileReader(testData));
             String line;
@@ -106,8 +106,9 @@ public class BayesClassifier {
                         values.add(Integer.parseInt(tokens[i]));
                     }
                 }
-                //these two variables are the numerators of the Bayes rule
-                //they are initalised to P(nonspam) and P(spam) so all that is left is to times by P(featurei | (non)spam)
+                //These two variables are the numerators of the Bayes rule
+                //They are initalised to P(nonspam) and P(spam) so all that is left is to times by P(feature1-12 | (non)spam)
+                //As the denominator of the Bayes rule is equal for both nonspam and spam, it does not need to be calculated
                 float probSpam = (float) totalSpam/(totalSpam + totalNonSpam);
                 float probNonSpam = (float) totalNonSpam/(totalSpam + totalNonSpam);
 
@@ -120,13 +121,15 @@ public class BayesClassifier {
                     probSpam *= counts[i*2+featureValue][1]/spamDenominator;
                 }
                 if (probNonSpam >= probSpam){
-                    classifications.add(0);
+                    classification = 0;
                 }
-                else { classifications.add(1); }
-
-            }
-            for (int i = 0; i < classifications.size(); i++) {
-                System.out.println("Instance " + i + " was classified as: " + classifications.get(i));
+                else {
+                    classification = 1;
+                }
+                System.out.println("Instance " + instanceNum + " was classified as: "+ classification);
+                System.out.println("P(Spam | f1,f2,...,f12) = " + probSpam);
+                System.out.println("P(NonSpam | f1,f2,...,f12) = " + probNonSpam +"\n--------------------------");
+                instanceNum++;
             }
         } catch (IOException e) {
             System.out.println("File I/O error!");
@@ -134,14 +137,12 @@ public class BayesClassifier {
     }
 
     public static void main(String[] args){
-
             if (args.length == 2) {
                 File trainingDataFile = new File(args[0]);
                 File testDataFile = new File(args[1]);
                 BayesClassifier classifier = new BayesClassifier(trainingDataFile, testDataFile);
                 classifier.classify();
             }
-
             else { System.out.println("Invalid args"); }
     }
 }
