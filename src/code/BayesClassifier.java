@@ -127,8 +127,8 @@ public class BayesClassifier {
                     classification = 1;
                 }
                 System.out.println("Instance " + instanceNum + " was classified as: "+ classification);
-                System.out.println("P(Spam | f1,f2,...,f12) = " + probSpam);
-                System.out.println("P(NonSpam | f1,f2,...,f12) = " + probNonSpam +"\n--------------------------");
+                System.out.println("P(Spam | f1,f2,...,f12) = " + probSpam + " / P(f1, f2, ..., f12)");
+                System.out.println("P(NonSpam | f1,f2,...,f12) = " + probNonSpam +" / P(f1, f2, ..., f12) \n--------------------------");
                 instanceNum++;
             }
         } catch (IOException e) {
